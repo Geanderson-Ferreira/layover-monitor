@@ -58,48 +58,51 @@ def index():
 # Endpoint para Requisição de dados
 @app.route('/get-dados', methods=['GET'])
 def get_data():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
                 
-    arrivalDate = request.args.get('checkin')
-    departureDate = request.args.get('checkout')
+        arrivalDate = request.args.get('checkin')
+        departureDate = request.args.get('checkout')
 
-    try:
-        arrivalDate = datetime.strptime(arrivalDate, '%Y-%m-%d')
-    except:
-        arrivalDate = None
+        try:
+            arrivalDate = datetime.strptime(arrivalDate, '%Y-%m-%d')
+        except:
+            arrivalDate = None
 
-    try:
-        departureDate = datetime.strptime(departureDate, '%Y-%m-%d')
-    except:
-        departureDate = None
+        try:
+            departureDate = datetime.strptime(departureDate, '%Y-%m-%d')
+        except:
+            departureDate = None
 
 
-    ta_session = get_ta_session(session['user'], session['password'])
+        ta_session = get_ta_session(session['user'], session['password'])
 
-    if ta_session['auth']:
-        dados = get_reservations(session=ta_session['session'], disFrom=arrivalDate, disTo=departureDate)
-    else:
-        dados = []
-
-    dados = [ x for x in dados['results']]
-
-    for dado in dados:
-
-        q = f"""
-                SELECT voucher_id, resv_confirmation, hotel_id, created_at, reserva_json
-                FROM atrio.reservasimportadaslayover where voucher_id ='{dado['voucher_id']}'
-            """
-        
-        consulta = execute_select_query(q)
-
-        if len(consulta) > 0:
-            dado['status_opera'] = True
+        if ta_session['auth']:
+            dados = get_reservations(session=ta_session['session'], disFrom=arrivalDate, disTo=departureDate)
         else:
-            dado['status_opera'] = False
-    
-    if dados:
-        return dados
-    else:
-        return {}
+            dados = []
+
+        dados = [ x for x in dados['results']]
+
+        for dado in dados:
+
+            q = f"""
+                    SELECT voucher_id, resv_confirmation, hotel_id, created_at, reserva_json
+                    FROM atrio.reservasimportadaslayover where voucher_id ='{dado['voucher_id']}'
+                """
+            
+            consulta = execute_select_query(q)
+
+            if len(consulta) > 0:
+                dado['status_opera'] = True
+            else:
+                dado['status_opera'] = False
+        
+        if dados:
+            return dados
+        else:
+            return {}
 
 
 # Roda o server
