@@ -25,7 +25,7 @@ def get_reservations(session, disFrom=None, disTo=None):
             'disTo':disTo,
             'page':page
         }
-        # Payload vazio, pois estamos usando GET
+        
         payload = {}
 
         # Cabeçalhos

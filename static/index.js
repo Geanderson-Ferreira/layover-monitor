@@ -1,23 +1,6 @@
 //Verifica se o conteúdo da DOM foi carregado para iniciar os scripts.
 document.addEventListener('DOMContentLoaded', function () {
 
-    // const tabela = document.getElementById('tableId')
-
-
-    // fetch('/get-data').then((result) =>{
-
-
-    //     result.map(
-
-    //             //construir a table
-
-
-    //     )
-
-    // })
-
-
-
 
     flatpickr(".date-picker", {
         locale: {
@@ -71,15 +54,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         console.log(selectedHotel)
 
-        /*console.log(
-            selectedHotel,
-            guestName,
-            voucherNumber,
-            selectedCompany,
-            checkinDate,
-            checkoutDate
-        )*/
-
         const rows = document.querySelectorAll('tbody tr'); // Query que eleciona as Rows do tbody
         rows.forEach(row => { 
 
@@ -124,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('filterButton').addEventListener('click', function(event) {
         // event.preventDefault(); //previque que a página atualize
         getFilterPreferences();
+        // fetchData()
     })
 
     document.getElementById('guestName').addEventListener('input', function(event) {
