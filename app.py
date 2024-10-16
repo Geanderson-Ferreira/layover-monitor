@@ -1,9 +1,8 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, session
+from flask import Flask, flash, render_template, request, redirect, url_for, session, jsonify
 import json
 from src.ta_functions import get_ta_session, get_reservations
 from src.SQL_Functions import execute_select_query
 from datetime import datetime
-
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -58,52 +57,50 @@ def index():
 # Endpoint para Requisição de dados
 @app.route('/get-dados', methods=['GET'])
 def get_data():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    else:
                 
-        arrivalDate = request.args.get('checkin')
-        departureDate = request.args.get('checkout')
+    arrivalDate = request.args.get('checkin')
+    departureDate = request.args.get('checkout')
 
-        try:
-            arrivalDate = datetime.strptime(arrivalDate, '%Y-%m-%d')
-        except:
-            arrivalDate = None
+    print(f'Arrival Date: {arrivalDate}, Departure Date: {departureDate}')  # Adicione este log
 
-        try:
-            departureDate = datetime.strptime(departureDate, '%Y-%m-%d')
-        except:
-            departureDate = None
+    try:
+        arrivalDate = datetime.strptime(arrivalDate, '%Y-%m-%d')
+    except:
+        arrivalDate = None
+
+    try:
+        departureDate = datetime.strptime(departureDate, '%Y-%m-%d')
+    except:
+        departureDate = None
 
 
-        ta_session = get_ta_session(session['user'], session['password'])
+    ta_session = get_ta_session(session['user'], session['password'])
 
-        if ta_session['auth']:
-            dados = get_reservations(session=ta_session['session'], disFrom=arrivalDate, disTo=departureDate)
-        else:
-            dados = []
+    if ta_session['auth']:
+        dados = get_reservations(session=ta_session['session'], disFrom=arrivalDate, disTo=departureDate)
+    else:
+        dados = []
 
-        dados = [ x for x in dados['results']]
+    dados = [ x for x in dados['results']]
 
-        for dado in dados:
+    for dado in dados:
 
-            q = f"""
-                    SELECT voucher_id, resv_confirmation, hotel_id, created_at, reserva_json
-                    FROM atrio.reservasimportadaslayover where voucher_id ='{dado['voucher_id']}'
-                """
-            
-            consulta = execute_select_query(q)
-
-            if len(consulta) > 0:
-                dado['status_opera'] = True
-            else:
-                dado['status_opera'] = False
+        q = f"""
+                SELECT voucher_id, resv_confirmation, hotel_id, created_at, reserva_json
+                FROM atrio.reservasimportadaslayover where voucher_id ='{dado['voucher_id']}'
+            """
         
-        if dados:
-            return dados
-        else:
-            return {}
+        consulta = execute_select_query(q)
 
+        if len(consulta) > 0:
+            dado['status_opera'] = True
+        else:
+            dado['status_opera'] = False
+    
+    if dados:
+        return dados
+    else:
+        return []
 
 # Roda o server
 if __name__ == '__main__':
