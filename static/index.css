@@ -8,7 +8,7 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Impede a rolagem na página inteira */
+    overflow: hidden;
 }
 
 .header {
@@ -77,6 +77,12 @@ html, body {
 	position:relative;
 	top:1px;
 }   
+
+.filter-button:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed; 
+    opacity: 0.6; 
+}
 
 .custom-select {
 	position: relative;
@@ -231,6 +237,16 @@ html, body {
     color: white;
 }
 
+.hotel-title-lateral {
+	text-align: center;
+    margin-bottom: 15px;
+	margin-top: -10px;
+	margin-top: 10px;
+    color: white;
+	font-style: italic;
+	font-weight: 100;
+}
+
 .itens-lateral {
    align-self: center;
 }
@@ -275,6 +291,27 @@ th {
 
 .hotel-header {
     border-radius: 5px 0 0 0 ;
+}
+
+.spin {
+    border-radius: 50%; 
+}
+
+#loading-spinner {
+    display: none; 
+    position: absolute; 
+    top: 40%; 
+    left: 50%; 
+    z-index: 9999; 
+    background-color: rgba(246, 246, 246, 0.9); 
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
+    border: none; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+	margin: 80px;
+	padding: 5px;	
 }
 
 .status-opera {
