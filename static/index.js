@@ -147,12 +147,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const differenceInTime = checkoutDate.getTime() - checkinDate.getTime();
         const differenceInDays = differenceInTime / (1000 * 3600 * 24);
 
-        if (differenceInDays > 31) {
-            alert('O preríodo de busca não pode ser superior a 31 dias!');
+        const maxRangeToSearch = 5
+
+        if (differenceInDays > maxRangeToSearch) {
+            alert(`O preríodo de busca não pode ser superior a ${maxRangeToSearch} dias!`);
 
             //define a data de checkout no max range baseado na data de checkin informado
             const maxCheckoutDate = new Date(checkinDate);
-            maxCheckoutDate.setDate(maxCheckoutDate.getDate() + 31)
+            maxCheckoutDate.setDate(maxCheckoutDate.getDate() + maxRangeToSearch)
 
             // Atualiza o valor do campo checkout no input
             checkoutValue = maxCheckoutDate.toISOString().split('T')[0];
