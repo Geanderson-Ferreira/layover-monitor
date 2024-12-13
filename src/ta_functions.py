@@ -83,7 +83,7 @@ def get_ta_session(username, password):
         'pex': '',
         'rPwd': '',
         'token': '',
-        'uID': username,
+        'Userid': username,
         'uPwd': password
     }
 
